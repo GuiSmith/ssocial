@@ -1,0 +1,91 @@
+form {
+    margin: auto;
+    padding: 0.5rem;
+}
+form .form-group {
+    margin-bottom: 0.5rem;
+}
+.form-container {
+    width: 35%;
+}
+
+/* Estilos básicos para a página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+}
+
+/* Container para centralizar e ajustar a tabela */
+.container {
+    max-width: 80%;
+    margin: 2rem auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Estilos para a tabela */
+table {
+    border: solid 1px lightgrey;
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+/* Estilo para os cabeçalhos da tabela */
+table th {
+    /* text-align: center; */
+    padding: 10px;
+}
+
+/* Estilo para as células da tabela */
+table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Estilo para as linhas da tabela */
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: lightgrey;
+}
+
+/* Estilo para links (se houver) */
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/*  */
+a.btn, .nav-link {
+    text-decoration: none;
+    /* color: inherit; */
+}
+
+table tr{
+    cursor: pointer;
+    user-select: none;
+}
+
+.header-text {
+    text-indent: 1rem;
+    text-align: justify;
+    font-size: large;
+}
+
+.project-container > div {
+    margin: 2rem 0;
+}
+
+.nav-link,.nav-link:hover {
+    text-decoration: none;
+}
