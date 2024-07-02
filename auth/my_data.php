@@ -63,6 +63,6 @@
                 </div>
             </div>
         </form>
-        <?php //require_source("front/script.php") ?>
+        <?php ?>
     </body>
 </html>

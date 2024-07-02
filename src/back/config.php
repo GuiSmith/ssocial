@@ -29,18 +29,14 @@
     function get_violation_message($code,$message){
         $error = [
             "column" => "pass",
+            "code" => $code,
             "message" => "Erro ao inserir: $message"
         ];
         if ($code = SQLITE3_CONSTRAINT) {
             $error_message_parts = explode(' ',$message);
+            $error["column"] = explode('.',$error_message_parts[count($error_message_parts)-1])[1];
             if ($error_message_parts[0] == "UNIQUE") {
-                $column = explode('.',$error_message_parts[count($error_message_parts)-1])[1];
-                $error["column"] = $column;
-                if (array_key_exists($column,COLS)) {
-                    $error["message"] = ucfirst(COLS[$column]." já existe!");
-                }else{
-                    $error["message"] = ucfirst("$column já existe!");
-                }
+                $error['message'] = array_key_exists($column,COLS) ? ucfirst(COLS[$column]." já existe!") : ucfirst("$column já existe!");
             }else{
                 $error["message"] = "Violação de restrição: $error_message";
             }
@@ -88,21 +84,27 @@
         if (!empty($array)) {
             $se_SQL .= " WHERE ";
             $conditions = [];
-            foreach ($array as $col => $value) {
-                if (!empty($value)) {
-                    $conditions[] = "$col LIKE ?";
+            foreach ($array as $col => $values) {
+                if (!empty($values)) {
+                    $value_parts = explode(',',$values);
+                    foreach ($value_parts as $value) {
+                        $marks[] = "$col LIKE ?";
+                    }
+                    $conditions[] = implode(" OR ",$marks);
                 }
             }
             $se_SQL .= implode(" AND ",$conditions);
         }
-        echo $se_SQL."<BR>";
+        echo $se_SQL;
         $se_query = $db->prepare($se_SQL);
         if (!empty($array)) {
             $i = 1;
             foreach ($array as $col => $value) {
                 if (!empty($value)) {
-                    $se_query->bindValue($i,"%".ucfirst($value)."%",SQLITE3_TEXT);
-                    $i++;
+                    foreach ($value_parts as $value) {
+                        $se_query->bindValue($i,"%".ucfirst($value)."%",SQLITE3_TEXT);
+                        $i++;
+                    }
                 }
             }
         }
@@ -113,6 +115,10 @@
         }
         return $users;
         //var_dump($users);
+    }
+
+    function format_date($string){
+        return empty($string) ? "" : date('d/m/Y H:i:s', strtotime($string));
     }
 
 ?>

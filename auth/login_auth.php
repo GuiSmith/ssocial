@@ -29,6 +29,7 @@
             if (password_verify($pass,$user['pass'])) {
                 $_SESSION["user"] = $user;
                 $_SESSION["logged"] = true;
+                $db->exec("UPDATE users SET logged_at = CURRENT_TIMESTAMP WHERE id = ".$user['id']);
             }else{
                 $_SESSION['feedback']['pass'] = "Senha incorreta!";
             }

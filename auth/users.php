@@ -16,6 +16,14 @@
             <div class = "text-center">
                 <h2>Pesquisa de usuários</h2>
             </div>
+            <!-- ID -->
+            <div class = "form-group">
+                <label for="id-input" class = "form-label">ID</label>
+                <input type="text" id = "id-input" name = "id" class = "form-control" value = "<?php echo isset($_SESSION['select']["id"]) ? $_SESSION['select']["id"] : "" ?>">
+                <small class = "form-text text-danger">
+                    <?php echo (isset($_SESSION['feedback']['id'])) ? $_SESSION['feedback']['id'] : ""; ?>
+                </small>
+            </div>
             <!-- Name -->
             <div class = "form-group">
                 <label for="username-input" class = "form-label">Nome</label>
@@ -71,11 +79,11 @@
                                 echo "<td>".$user['username']."</td>";
                                 echo "<td>".$user['email']."</td>";
                                 echo "<td>".$user['cpf']."</td>";
-                                echo "<td>".$user['created_at']."</td>";
-                                echo "<td>".$user['updated_at']."</td>";
+                                echo "<td>".format_date($user['created_at'])."</td>";
+                                echo "<td>".format_date($user['updated_at'])."</td>";
+                                echo "<td>".format_date($user['logged_at'])."</td>";
                             }
                         }
-                    
                     ?>
                 </tbody>
             </table>
