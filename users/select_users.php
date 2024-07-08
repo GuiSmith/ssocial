@@ -5,7 +5,6 @@
         require SRC_URL."back/functions.php";
         $db = db_conn();
 
-        $_SESSION['select']['id'] = $id = get_input($_POST['id']);
         $_SESSION['select']['username'] = $username = get_input($_POST['username']);
         $_SESSION['select']['email'] = $email = get_input($_POST['email']);
         $_SESSION['select']['cpf'] = $cpf = getCPF(get_input($_POST['cpf']));
@@ -23,10 +22,14 @@
             $_SESSION['users'] = $users;
             header("Location: users.php");
         }else{
-            $_SESSION['feedback']['cpf'] = "Usuários não encontrados com estes filtros";
+            echo "Houve um erro com a função!";
+            echo "<br>Dados: ";
+            var_dump($_SESSION['select']);
+            echo "<br>Colunas: ";
+            var_dump($cols);
+            echo "<br>Usuários: ";
             var_dump($users);
         }
-        
     }
 
 ?>

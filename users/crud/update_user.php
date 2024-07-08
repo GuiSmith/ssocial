@@ -1,6 +1,6 @@
 <?php
 
-    require "../src/back/config.php";
+    require "../../src/back/config.php";
     checkAuth(true);
     
     if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -11,15 +11,15 @@
         $_SESSION['update']['username'] = $username = get_input($_POST['username']);
         $_SESSION['update']['email'] = $email = get_input($_POST['email']);
         $_SESSION['update']['pass'] = $pass = !empty($_POST['pass']) ? password_hash(get_input($_POST['pass']),PASSWORD_DEFAULT) : "";
-        $_SESSION['update']['cpf'] = $cpf = getCPF(get_input($_POST['cpf']));
+        $_SESSION['update']['pass'] = $cpf = getCPF(get_input($_POST['cpf']));
+        $_SESSION['update']['bio'] = $bio = substr(get_input($_POST['bio']),0,100);
+        unset($_SESSION['feedback']);
         $ok = true;
         
         //Username
-        if (empty($username)) {
+        if (trim(empty($username))) {
             $_SESSION['feedback']['username'] = "É preciso preencher o nome";
             $ok = false;
-        }else{
-            unset($_SESSION['feedback']['username']);
         }
         //E-mail
         if (empty($email)) {
@@ -28,20 +28,16 @@
         }else{
             if (!filter_var($email,FILTER_VALIDATE_EMAIL)) {
                 $_SESSION['feedback']['email'] = "E-mail inválido";
-            }else{
-                unset($_SESSION['feedback']['email']);
+                $ok = false;
             }
         }
         //CPF
         if (!checkCPF($cpf)) {
             $_SESSION['feedback']['cpf'] = "CPF inválido";
             $ok = false;
-        }else{
-            unset($_SESSION['feedback']['cpf']);
         }
-
         if ($ok) {
-            $up_SQL = "UPDATE users SET username = :username, email = :email, cpf = :cpf";
+            $up_SQL = "UPDATE users SET username = :username, email = :email, cpf = :cpf, bio = :bio";
             if (!empty($pass)) $up_SQL .= ", pass = :pass";
             $up_SQL .= " WHERE id = :id";
             //var_dump($up_SQL);
@@ -50,25 +46,18 @@
             $up_query->bindValue(':email',$email,SQLITE3_TEXT);
             if (!empty($pass)) $up_query->bindValue(':pass',$pass,SQLITE3_TEXT);
             $up_query->bindValue(':cpf',$cpf,SQLITE3_TEXT);
+            $up_query->bindValue(':bio',$bio,SQLITE3_TEXT);
             $up_query->bindValue(':id',$_SESSION['user']['id'],SQLITE3_INTEGER);        
-
-            try {
-                if ($up_query->execute()) {
-                    unset($_SESSION['feedback']);
-                    unset($_SESSION['update']);
-                    $_SESSION['user'] = get_user_by('id',$_SESSION['user']['id']);
-                }else{
-                    // Check the last error code and message
-                    $error_code = $db->lastErrorCode();
-                    $error_message = $db->lastErrorMsg();
-                    $error = get_violation_message($db->lastErrorCode(),$db->lastErrorMsg());
-                    $_SESSION['feedback'][$error['column']] = $error['message'];
-                }
-            } catch (Exception $e) {
-                $_SESSION['feedback']['pass'] = $e;
+            if ($up_query->execute()) {
+                unset($_SESSION['feedback']);
+                $_SESSION['feedback']['update'] = "Atualizado!";
+                unset($_SESSION['update']);
+            }else{
+                // Check the last error code and message
+                $_SESSION['feedback']['update'] = "Houve um erro com a atualização dos dados: ".$db->lastErrorMsg();
             }
         }
-        header("Location: ".AUTH_LINK."my_data.php");
+        header("Location: ".USERS_LINK."crud/my_data.php");
     }else{
         echo "Você não devia estar aqui.";
         echo "<a href = '".MAIN_LINK."index.php'>Voltar</a>";

@@ -1,9 +1,7 @@
 <?php
 
-    require "../src/back/config.php";
+    require "../../src/back/config.php";
     checkAuth(false);
-    if(!isset($_SESSION['signin'])) unset($_SESSION['feedback']);
-    if(isset($_SESSION['login'])) unset($_SESSION['login']);
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +21,7 @@
                 <label for="username-input" class = "form-label">Nome</label>
                 <input type="text" id = "username-input" name = "username" class = "form-control" value = "<?php echo isset($_SESSION['signin']["username"]) ? $_SESSION['signin']["username"] : "" ?>" required>
                 <small class = "form-text text-danger">
-                    <?php echo (isset($_SESSION['feedback']['username'])) ? $_SESSION['feedback']['username'] : ""; ?>
+                    <?php echo (isset($_SESSION['feedback']['signin']['username'])) ? $_SESSION['feedback']['signin']['username'] : ""; ?>
                 </small>
             </div>
             <!-- E-mail -->
@@ -31,7 +29,7 @@
                 <label for="email-input" class = "form-label">E-mail</label>
                 <input type="email" id = "email-input" name = "email" class = "form-control" value = "<?php echo isset($_SESSION['signin']["email"]) ? $_SESSION['signin']["email"] : "" ?>" required>
                 <small class = "form-text text-danger">
-                    <?php echo (isset($_SESSION['feedback']['email'])) ? $_SESSION['feedback']['email'] : ""; ?>
+                    <?php echo (isset($_SESSION['feedback']['signin']['email'])) ? $_SESSION['feedback']['signin']['email'] : ""; ?>
                 </small>
             </div>
             <!-- CPF -->
@@ -39,7 +37,7 @@
                 <label for="cpf-input" class = "form-label">CPF</label>
                 <input type="text" id = "cpf-input" name = "cpf" class = "form-control" value = "<?php echo isset($_SESSION['signin']["cpf"]) ? $_SESSION['signin']["cpf"] : "" ?>" required>
                 <small class = "form-text text-danger">
-                    <?php echo (isset($_SESSION['feedback']['cpf'])) ? $_SESSION['feedback']['cpf'] : ""; ?>
+                    <?php echo (isset($_SESSION['feedback']['signin']['cpf'])) ? $_SESSION['feedback']['signin']['cpf'] : ""; ?>
                 </small>
             </div>
             <!-- Senha -->
@@ -47,7 +45,7 @@
                 <label for="pass-input" class = "form-label">Senha</label>
                 <input type="password" id = "pass-input" name = "pass" class = "form-control" value = "<?php echo isset($_SESSION['signin']["pass"]) ? $_SESSION['signin']["pass"] : "" ?>" required>
                 <small class = "form-text text-danger">
-                    <?php echo (isset($_SESSION['feedback']['pass'])) ? $_SESSION['feedback']['pass'] : ""; ?>
+                    <?php echo isset($_SESSION['feedback']['signin']['pass']) ? $_SESSION['feedback']['signin']['pass'] : ""; ?>
                 </small>
             </div>
             <!-- Enviar -->

@@ -1,0 +1,9 @@
+-- database: ./src/back/database.sqlite
+
+-- Use the ▷ button in the top right corner to run the entire file.
+
+SELECT * FROM users;
+
+SELECT * FROM users_follow;
+
+SELECT sql FROM sqlite_schema WHERE type = 'trigger';

@@ -16,14 +16,6 @@
             <div class = "text-center">
                 <h2>Pesquisa de usuários</h2>
             </div>
-            <!-- ID -->
-            <div class = "form-group">
-                <label for="id-input" class = "form-label">ID</label>
-                <input type="text" id = "id-input" name = "id" class = "form-control" value = "<?php echo isset($_SESSION['select']["id"]) ? $_SESSION['select']["id"] : "" ?>">
-                <small class = "form-text text-danger">
-                    <?php echo (isset($_SESSION['feedback']['id'])) ? $_SESSION['feedback']['id'] : ""; ?>
-                </small>
-            </div>
             <!-- Name -->
             <div class = "form-group">
                 <label for="username-input" class = "form-label">Nome</label>
@@ -64,7 +56,10 @@
                     <th scope="col">Nome</th>
                     <th scope="col">E-mail</th>
                     <th scope="col">CPF</th>
-                    <th scope="col">Entrou em</th>
+                    <th scope="col">Seguindo</th>
+                    <th scope="col">Seguidores</th>
+                    <th scope="col">Postagens</th>
+                    <th scope="col">Data cadastro</th>
                     <th scope="col">Data atualização</th>
                     <th scope="col">Último login</th>
                 </thead>
@@ -74,19 +69,28 @@
                         if (isset($_SESSION['users'])) {
                             //var_dump($_SESSION['users']);
                             foreach ($_SESSION['users'] as $user) {
-                                echo "<tr scope = 'row'>";
+                                echo "<tr scope = 'row' onclick = 'checkProfile(".$user['id'].")'>";
                                 echo "<td>".$user['id']."</td>";
                                 echo "<td>".$user['username']."</td>";
                                 echo "<td>".$user['email']."</td>";
                                 echo "<td>".$user['cpf']."</td>";
+                                echo "<td>".$user['total_following']."</td>";
+                                echo "<td>".$user['total_followers']."</td>";
+                                echo "<td>".$user['total_posts']."</td>";
                                 echo "<td>".format_date($user['created_at'])."</td>";
                                 echo "<td>".format_date($user['updated_at'])."</td>";
                                 echo "<td>".format_date($user['logged_at'])."</td>";
                             }
+                            unset($_SESSION['users']);
                         }
                     ?>
                 </tbody>
             </table>
         </section>
+        <script>
+            function checkProfile(id){
+                window.location.href = `profile.php?id=${id}`;
+            }
+        </script>
     </body>
 </html>

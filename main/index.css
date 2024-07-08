@@ -24,6 +24,7 @@ body {
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    overflow: auto;
 }
 
 /* Estilos para a tabela */
@@ -32,6 +33,7 @@ table {
     width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
+    word-wrap: unset;
 }
 
 /* Estilo para os cabeçalhos da tabela */
@@ -44,6 +46,7 @@ table th {
 table td {
     padding: 10px;
     border-bottom: 1px solid #ddd;
+    white-space: nowrap;
 }
 
 /* Estilo para as linhas da tabela */

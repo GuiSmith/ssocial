@@ -1,6 +1,6 @@
 <?php
 
-    require "../src/back/config.php";
+    require "../../src/back/config.php";
     checkAuth(false);
     
     if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -12,39 +12,39 @@
         $_SESSION['signin']['cpf'] = $cpf = getCPF(get_input($_POST['cpf']));
         $_SESSION['signin']['pass'] = $pass = get_input($_POST['pass']);
         $ok = true;
-        $href = AUTH_LINK."signin.php";
+        $href = USERS_LINK."crud/signin.php";
         
         //Username
         if (empty($username)) {
-            $_SESSION['feedback']['username'] = "É preciso preencher o nome";
+            $_SESSION['feedback']['signin']['username'] = "É preciso preencher o nome";
             $ok = false;
         }else{  
-            unset($_SESSION['feedback']['username']);
+            unset($_SESSION['feedback']['signin']['username']);
         }
         //E-mail
         if (empty($email)) {
-            $_SESSION['feedback']['email'] = "É preciso preencher o e-mail!";
+            $_SESSION['feedback']['signin']['email'] = "É preciso preencher o e-mail!";
             $ok = false;
         }else{
             if (!filter_var($email,FILTER_VALIDATE_EMAIL)) {
-                $_SESSION['feedback']['email'] = "E-mail inválido";
+                $_SESSION['feedback']['signin']['email'] = "E-mail inválido";
             }else{
-                unset($_SESSION['feedback']['email']);
+                unset($_SESSION['feedback']['signin']['email']);
             }
         }
         //CPF
         if (!checkCPF($cpf)) {
-            $_SESSION['feedback']['cpf'] = "CPF inválido";
+            $_SESSION['feedback']['signin']['cpf'] = "CPF inválido";
             $ok = false;
         }else{
-            unset($_SESSION['feedback']['cpf']);
+            unset($_SESSION['feedback']['signin']['cpf']);
         }
         //Password
         if (empty($pass)) {
-            $_SESSION['feedback']['pass'] = "É preciso preencher a senha";
+            $_SESSION['feedback']['signin']['pass'] = "É preciso preencher a senha";
             $ok = false;
         }else{
-            unset($_SESSION['feedback']['pass']);
+            unset($_SESSION['feedback']['signin']['pass']);
         }
 
         if ($ok) {
@@ -56,24 +56,12 @@
             $in_query->bindValue(':pass',$pass,SQLITE3_TEXT);
             $in_query->bindValue(':cpf',$cpf,SQLITE3_TEXT);
 
-            try {
-                if ($in_query->execute()) {
-                    unset($_SESSION['feedback']);
-                    unset($_SESSION['signin']);
-                    $href = AUTH_LINK."login.php";
-                }else{
-                    // Check the last error code and message
-                    $error_code = $db->lastErrorCode();
-                    $error_message = $db->lastErrorMsg();
-                    $error = get_violation_message($db->lastErrorCode(),$db->lastErrorMsg());
-                    $_SESSION['feedback'][$error['column']] = $error['message'];
-                }
-            } catch (SQLite3Exception $error) {
-                var_dump($error);
-                echo "exception";
-                //var_dump($error);
-            } catch (Exception $error) {
-                var_dump($error);
+            if ($in_query->execute()) {
+                unset($_SESSION['feedback']['signin']);
+                unset($_SESSION['signin']);
+                $href = USERS_LINK."auth/login.php";
+            }else{
+                $_SESSION['feedback']['signin']['pass'] = "Houve um erro na criação de um usuário: ".$db->lastErrorMsg();
             }
         }
         header("Location: $href");
