@@ -32,7 +32,6 @@
                     'adm' => $user['adm']
                 ];
                 $db->exec("UPDATE users SET logged_at = CURRENT_TIMESTAMP WHERE id = ".$user['id']);
-                $_SESSION["logged"] = true;
             }else{
                 $_SESSION['feedback']['login']['pass'] = "Senha incorreta!";
             }

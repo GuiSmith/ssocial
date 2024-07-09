@@ -8,21 +8,26 @@
         $id = $_SESSION['user']['id'];
     }
     $profile = get_user_by('id',$id);
+    $profile['following_since'] = "";
+    $profile['followed_first_at'] = "";
+    $profile['following'] = false;    
     $db = db_conn();
 
-    $id_user_follower = $_SESSION['user']['id'];
-    $id_user_followed = $profile['id'];
-    
-    $se_query = $db->query("SELECT * FROM users_follow WHERE id_user_follower = $id_user_follower AND id_user_followed = $id_user_followed");
-    $result = $se_query->fetchArray(SQLITE3_ASSOC);
-    if ($result) {
-        $active = $result['active'];
-        if ($active) {
-            $profile['following_since'] = $result['updated_at'] ? $result['updated_at'] : $result['created_at'];
-        }
-        $profile['followed_first_at'] = $result['created_at'];
-    }else{
-        $active = false;
+    if (logged()) {
+        $id_user_follower = $_SESSION['user']['id'];
+        $id_user_followed = $profile['id'];
+        
+        $se_query = $db->query("SELECT * FROM users_follow WHERE id_user_follower = $id_user_follower AND id_user_followed = $id_user_followed");
+        $follower_data = $se_query->fetchArray(SQLITE3_ASSOC);
+        if ($follower_data) {
+            $profile['following'] = $follower_data['active'];
+            if ($profile['following']) {
+                $profile['following_since'] = $follower_data['updated_at'] ? $follower_data['updated_at'] : $follower_data['created_at'];
+            }
+            $profile['followed_first_at'] = $follower_data['created_at'];
+        }else{
+            $profile['following'] = false;
+        }   
     }
     
 ?>
@@ -106,12 +111,17 @@
                 </div>
                 <div class = "col-lg-6 col-md-6 col-sm-12" style = "text-align: left">
                     <small class = "text-form text-muted">
-                        <?php echo isset($_SESSION['feedback']['follow']) ? $_SESSION['feedback']['follow'] : "" ?>
+                        <?php
+                            if (isset($_SESSION['feedback']['follow'])) {
+                                echo $_SESSION['feedback']['follow'];
+                                unset($_SESSION['feedback']['follow']);
+                            }
+                        ?>
                     </small>
                 </div>
                 <div class = "col-lg-3 col-md-6 col-sm-12" style = "text-align: right">
-                    <button type = "submit" class = "btn btn-success" <?php echo $profile['id'] == $_SESSION['user']['id'] ? "disabled" : "" ?>>
-                        <?php echo $active ? "Seguindo" : "Seguir" ?>
+                    <button type = "submit" class = "btn btn-success" <?php echo $_SESSION['user']['id'] == $profile['id'] ? "disabled" : "" ?>>
+                        <?php echo $profile['following'] ? "Seguindo" : "Seguir" ?>
                     </button>
                 </div>
             </div>

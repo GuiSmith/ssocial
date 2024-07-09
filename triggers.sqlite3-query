@@ -7,3 +7,7 @@ SELECT * FROM users;
 SELECT * FROM users_follow;
 
 SELECT sql FROM sqlite_schema WHERE type = 'trigger';
+
+SELECT sql FROM sqlite_schema WHERE type = 'view';
+
+CREATE VIEW my_data AS SELECT * FROM users;

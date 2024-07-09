@@ -59,7 +59,7 @@
             <!-- Bio -->
             <div class = "form-group">
                 <label for="bio-input" class = "form-label">Biografia</label>
-                <textarea name="bio" id="bio-input" cols="30" rows="10" class = "form-control" maxlength = "100" oninput = "limitLength(100,'bio-feedback')" ><?php echo isset($_SESSION['update']["bio"]) ? $_SESSION['update']['bio'] : $my_data['bio'] ?></textarea>
+                <textarea name="bio" id="bio-input" cols="30" rows="3" class = "form-control" maxlength = "100" oninput = "limitLength(100,'bio-feedback')" ><?php echo isset($_SESSION['update']["bio"]) ? $_SESSION['update']['bio'] : $my_data['bio'] ?></textarea>
                 <small id = "bio-feedback" class = "form-text text-muted" style="display: block;text-align: right">
                     100
                 </small>

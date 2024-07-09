@@ -25,10 +25,22 @@
     ]);
     define('ERROR_UNIQUE','UNIQUE');
 
+    //Formata data de formato string (sqlite3) para data (Brasil)
     function format_date($date_string){
         return $date_string != null ? date('d/m/Y H:i:s',strtotime($date_string)) : "";
     }
+
+    //Retorna dados de seguidor
+    function get_follower_data(int $id_user_follower,int $id_user_followed, bool $array){
+        
+    }
+
+    //Retorna true se o usuário atual estiver autenticado - status de autenticação
+    function logged(){
+        return isset($_SESSION['user']);
+    }
     
+    //Retorna uma mensagem humana de erro de violação de constraint do banco de dados
     function get_violation_message($code,$message){
         $error = [
             "column" => "pass",
@@ -51,6 +63,7 @@
         return $error;
     }
 
+    //Retorna a conexão com banco de dados
     function db_conn(){
         $db = new SQLite3(SRC_URL.'back/database.sqlite',SQLITE3_OPEN_READWRITE);
         //var_dump($db);
@@ -75,6 +88,7 @@
         }
     }
 
+    //Buscar dados de um usuário com coluna única (ID, email ou cpf)
     function get_user_by($unique_col,$col_value){
         $db = db_conn();
         $se_SQL = "SELECT * FROM users WHERE $unique_col LIKE :col_value";
@@ -85,6 +99,7 @@
         return $user;
     }
 
+    //Consulta de usuários
     function get_users(array $array = []){
         $db = db_conn();
         $se_SQL = "SELECT * FROM users";
