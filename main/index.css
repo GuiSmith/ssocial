@@ -16,15 +16,22 @@ body {
     margin: 0;
 }
 
-/* Container para centralizar e ajustar a tabela */
-.container {
-    max-width: 80%;
+.table-container, .container {
     margin: 2rem auto;
     padding: 20px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: auto;
+}
+
+.table-container {
+    max-width: 95%;
+}
+
+/* Container para centralizar e ajustar a tabela */
+.container {
+    max-width: 80%;
 }
 
 /* Estilos para a tabela */
@@ -72,11 +79,6 @@ a:hover {
 a.btn, .nav-link {
     text-decoration: none;
     /* color: inherit; */
-}
-
-table tr{
-    cursor: pointer;
-    user-select: none;
 }
 
 .header-text {

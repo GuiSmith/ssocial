@@ -12,7 +12,13 @@
         <?php require SRC_URL."/front/navbar.php" ?>
         <h2 class = "text-center">Testes</h2>
         <?php
-            
-n        ?>
+            $um = "um";
+            $um .= " e dois";
+            echo $um;
+
+            echo set_form_input('ID','id_user',1,['readonly' => true]);
+            var_dump(set_form_input('ID','id_user',1,['readonly' => true]));
+
+        ?>
     </body>
 </html>

@@ -48,7 +48,7 @@
         }
 
         if ($ok) {
-            $in_SQL = "INSERT OR ROLLBACK INTO users (username,email,pass,cpf) values (:username,:email,:pass,:cpf)";
+            $in_SQL = "INSERT INTO users (username,email,pass,cpf) values (:username,:email,:pass,:cpf)";
             $in_query = $db->prepare($in_SQL);
             $in_query->bindValue(':username',$username,SQLITE3_TEXT);
             $in_query->bindValue(':email',$email,SQLITE3_TEXT);

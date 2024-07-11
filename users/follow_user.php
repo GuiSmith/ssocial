@@ -17,11 +17,11 @@
         
 
         $se_query = $db->query("SELECT * FROM users_follow WHERE id_user_follower = $id_user_follower AND id_user_followed = $id_user_followed");
-        $result = $se_query->fetchArray(SQLITE3_ASSOC);
-        var_dump($result);
+        $user_follow = $se_query->fetchArray(SQLITE3_ASSOC);
+        var_dump($user_follow);
 
-        if ($result) {
-            $active = $result['active'] ? 0 : 1;
+        if ($user_follow) {
+            $active = $user_follow['active'] ? 0 : 1;
             echo "<p>Novo status será: $active</p>";
 
             $up_query = $db->exec("UPDATE users_follow SET active = $active WHERE id_user_follower = $id_user_follower AND id_user_followed = $id_user_followed");

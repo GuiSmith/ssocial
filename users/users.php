@@ -1,7 +1,6 @@
 <?php
 
     require "../src/back/config.php";
-    checkAuth(true);
 ?>
 
 <!DOCTYPE html>
@@ -42,10 +41,11 @@
             </div>
             <!-- Pesquisar -->
             <div style = "text-align: right">
+                
                 <button type = "submit" class = "btn btn-success">Pesquisar</button>
             </div>
         </form>
-        <section class = "container">
+        <section class = "table-container">
             <!-- Título -->
             <div class = "text-center">
                 <h2>Usuários cadastrados</h2>
@@ -56,41 +56,31 @@
                     <th scope="col">Nome</th>
                     <th scope="col">E-mail</th>
                     <th scope="col">CPF</th>
-                    <th scope="col">Seguindo</th>
-                    <th scope="col">Seguidores</th>
-                    <th scope="col">Postagens</th>
                     <th scope="col">Data cadastro</th>
-                    <th scope="col">Data atualização</th>
-                    <th scope="col">Último login</th>
+                    <th scope="col">CPF</th>                    
+                    <th scope="col" colspan="2">Ações</th>
                 </thead>
                 <tbody>
                     <?php
-
                         if (isset($_SESSION['users'])) {
                             //var_dump($_SESSION['users']);
                             foreach ($_SESSION['users'] as $user) {
-                                echo "<tr scope = 'row' onclick = 'checkProfile(".$user['id'].")'>";
+                                echo "<tr scope = 'row'     >";
                                 echo "<td>".$user['id']."</td>";
                                 echo "<td>".$user['username']."</td>";
                                 echo "<td>".$user['email']."</td>";
                                 echo "<td>".$user['cpf']."</td>";
-                                echo "<td>".$user['total_following']."</td>";
-                                echo "<td>".$user['total_followers']."</td>";
-                                echo "<td>".$user['total_posts']."</td>";
                                 echo "<td>".format_date($user['created_at'])."</td>";
-                                echo "<td>".format_date($user['updated_at'])."</td>";
-                                echo "<td>".format_date($user['logged_at'])."</td>";
+                                echo "<td>".$user['cpf']."</td>";
+                                echo "<td>".set_link_button('Perfil','profile.php?id='.$user['id'],'btn btn-primary')."</td>";
+                                echo "<td>".set_link_button('Estatísticas','users_statistics.php?id='.$user['id'],'btn btn-secondary')."</td>";
+                                echo "</tr>";
                             }
-                            unset($_SESSION['users']);
+                            //unset($_SESSION['users']);
                         }
                     ?>
                 </tbody>
             </table>
         </section>
-        <script>
-            function checkProfile(id){
-                window.location.href = `profile.php?id=${id}`;
-            }
-        </script>
     </body>
 </html>
