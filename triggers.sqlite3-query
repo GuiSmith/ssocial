@@ -4,19 +4,7 @@
 
 SELECT * FROM users;
 
-SELECT * FROM get_triggers;
+SELECT * FROM users_visits;
 
-DROP TRIGGER update_total_follow_on_insert;
+SELECT * FROM sqlite_schema WHERE type = 'table';
 
-CREATE TRIGGER update_total_follow_on_insert AFTER INSERT ON users_follow BEGIN
-    UPDATE users_statistics SET total_following = total_following + 1 WHERE users_statistics.id_user = NEW.id_user_follower;
-    UPDATE users_statistics SET total_followers = total_followers + 1 WHERE users_statistics.id_user = NEW.id_user_followed;
-END;
-
-DELETE FROM users_follow;
-
-SELECT * FROM users_follow;
-
-SELECT * FROM users_statistics WHERE total_following > 0;
-
-UPDATE users_statistics SET total_followers = 0 WHERE total_followers > 0;

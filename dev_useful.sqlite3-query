@@ -1,0 +1,8 @@
+-- database: ./database.sqlite
+
+-- Use the ▷ button in the top right corner to run the entire file.
+
+/*
+The following command deletes all records of user_visits if the profile visited is not an active user of the system
+    DELETE FROM users_visits WHERE id_host NOT IN (SELECT id FROM users);
+*/

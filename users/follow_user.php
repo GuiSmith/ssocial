@@ -3,19 +3,30 @@
     require "../src/back/config.php";
     checkAuth(true);
 
-    if($_SERVER["REQUEST_METHOD"] == "POST"){
+    if($_SERVER["REQUEST_METHOD"] == "POST" || $_SERVER['REQUEST_METHOD'] == "GET"){
         $db = db_conn();
         require SRC_URL."back/functions.php";
+        $redirect_url = isset($_GET['redirect_url']) ? $_GET['redirect_url'] : "profile.php";
 
         $id_user_follower = $_SESSION['user']['id'];
-        $id_user_followed = get_input($_POST['id']);
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $id_user_followed = get_input($_POST['id']);
+        }else{
+            if (isset($_GET['id'])) {
+                $id_user_followed = get_input($_GET['id']);
+            }else{
+                header("Location: $redirect_url");
+            }
+        }
         
-        echo "<p>";
-            echo "ID usuário seguidor: $id_user_follower";
-            echo "<br>ID usuário seguido: ".$id_user_followed;
-        echo "</p>";
+        /*
+        echo"<p>
+                ID usuário seguidor: $id_user_follower
+                <br>
+                ID usuário seguido: $id_user_followed
+            </p>";
+        */
         
-
         $se_query = $db->query("SELECT * FROM users_follow WHERE id_user_follower = $id_user_follower AND id_user_followed = $id_user_followed");
         $user_follow = $se_query->fetchArray(SQLITE3_ASSOC);
         var_dump($user_follow);
@@ -38,8 +49,7 @@
                 echo "<p>Inserido com sucesso</p>";
             }
         }
-
-        header("Location: ".USERS_LINK."profile.php?id=$id_user_followed");
+        header("Location: $redirect_url#id-$id_user_followed");
     }
 
 ?>

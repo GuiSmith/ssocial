@@ -15,11 +15,11 @@
     </head>
     <body>
         <?php require SRC_URL."front/navbar.php" ?>
+        <!-- Título -->
+        <div class = "text-center">
+            <h2>Meus dados</h2>
+        </div>
         <form class = "container form-container" action="update_user.php" method = "POST" autocomplete = "off">
-            <!-- Título -->
-            <div class = "text-center">
-                <h2>Dados de <?php echo $my_data['username'] ?></h2>
-            </div>
             <!-- Name -->
             <div class = "form-group">
                 <label for="username-input" class = "form-label">Nome</label>
@@ -81,8 +81,5 @@
             </div>
         </form>
         <?php require SRC_URL."front/script.php" ?>
-        <script>
-
-        </script>
     </body>
 </html>

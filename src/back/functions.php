@@ -12,8 +12,9 @@
     Nome real da função: validaCPF(){}
     */
 
-    function get_chars($string){
-        return preg_replace( '/[^a-zA-Z]/is', '', $string );
+    function get_chars($string) {
+        // Use the 'u' modifier to enable UTF-8 support and include spaces in the allowed characters
+        return preg_replace('/[^\\p{L} ]/u', '', $string);
     }
 
     function getCPF($cpf){

@@ -4,13 +4,16 @@
 
     define('BASE_URL', '/var/www/html/projects/ssocial/');
     define('MAIN_URL', BASE_URL . 'main/');
-    define('USERS_URL', BASE_URL . 'users/');
     define('SRC_URL', BASE_URL . 'src/');
+    define('USERS_URL', BASE_URL . 'users/');
+    define('POSTS_URL', BASE_URL . 'posts/');
 
     define('BASE_LINK','/projects/ssocial/');
     define('MAIN_LINK', BASE_LINK . 'main/');
-    define('USERS_LINK', BASE_LINK . 'users/');
     define('SRC_LINK', BASE_LINK . 'src/');
+    define('MEDIA_LINK', BASE_LINK . 'media/');
+    define('USERS_LINK', BASE_LINK . 'users/');
+    define('POSTS_LINK', BASE_LINK . 'posts/');
 
     if (!defined("SQLITE3_CONSTRAINT")) {
         define("SQLITE3_CONSTRAINT",19);
@@ -24,15 +27,114 @@
         "updated_at" => "data atualização"
     ]);
     define('ERROR_UNIQUE','UNIQUE');
+    
+    //Consulta de postagens
+    function get_posts(array $array = [], $single = false){
+        $db = db_conn();
+        $se_SQL = "SELECT * FROM post";
+        if (!empty($array)) {
+            $se_SQL .= " WHERE ";
+            $conditions = [];
+            foreach ($array as $col => $values) {
+                $value_parts = explode(',',$values);
+                foreach ($value_parts as $value) {
+                    $marks[] = "$col LIKE ?";
+                }
+                $conditions[] = implode(" OR ",$marks);
+            }
+            $se_SQL .= implode(" AND ",$conditions);
+        }
+        //echo $se_SQL;
+        $se_query = $db->prepare($se_SQL);
+        if (!empty($array)) {
+            $i = 1;
+            foreach ($array as $col => $value) {
+                foreach ($value_parts as $value) {
+                    $se_query->bindValue($i,"%".trim(ucfirst($value))."%",SQLITE3_TEXT);
+                    $i++;
+                }
+            }
+        }
+        $se_result = $se_query->execute();
+        $posts = [];
+        while ($row = $se_result->fetchArray(SQLITE3_ASSOC)) {
+            $row['options'] = [
+                ['text' => 'Visualizar','path' => POSTS_LINK.'crud/view_post.php']
+            ];
+            if (logged()) {
+                if ($row['id_user'] == $_SESSION['user']['id']) {
+                    $row['options'][] = ['text' => 'Editar','path' => POSTS_LINK.'crud/edit_post.php'];
+                    $row['options'][] = ['text' => 'Deletar','path' => POSTS_LINK.'crud/delete_post.php'];
+                }
+                //Se usuário autenticado já curtiu o post
+                if ($db->querySingle("SELECT created_at FROM post_likes WHERE id_user = ".$_SESSION['user']['id']." AND id_post = ".$row['id']) == null) {
+                    $row['liked'] = false;
+                }else{
+                    $row['liked'] = true;
+                }
+            }else{
+                $row['liked'] = false;
+            }
+            $row['posted_at'] = time_ago($row['created_at']);
+            $posts[] = $row;
+        }
+        return $single ? $posts[0] : $posts;
+    }
+
+    //Retorna a diferença de tempo entre uma data e agora no formato de texto simplificado
+    function time_ago($datetime) {
+        // Create a DateTime object for the current time in the local timezone
+        $now = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+
+        // Create a DateTime object for the provided time in UTC
+        $post_time = new DateTime($datetime, new DateTimeZone('UTC'));
+
+        // Convert the post time to the local timezone
+        $post_time->setTimezone(new DateTimeZone('America/Sao_Paulo'));
+
+        // Calculate the difference between the current time and the post time
+        $interval = $now->diff($post_time);
+
+        $seconds = $interval->s;
+        $minutes = $interval->i;
+        $hours = $interval->h;
+        $days = $interval->d;
+        $weeks = floor($interval->days / 7);
+        $months = $interval->m + ($interval->y * 12);
+        $years = $interval->y;
+
+        if ($years > 0) {
+            return $years == 1 ? "1 ano" : "$years anos";
+        }
+        if ($months > 0) {
+            return $months == 1 ? "1 mês" : "$months meses";
+        }
+        if ($weeks > 0) {
+            return $weeks == 1 ? "1 semana" : "$weeks semanas";
+        }
+        if ($days > 0) {
+            return $days == 1 ? "ontem" : "$days dias";
+        }
+        if ($hours > 0) {
+            return $hours."h";
+        }
+        if ($minutes > 0) {
+            return $minutes."min";
+        }
+        if ($seconds > 0) {
+            return $seconds."s";
+        }
+        return "Agora";
+    }
+
+    //Retorna true se o número passado for inteiro e positivo
+    function is_natural($number){
+        return is_numeric($number) && $number > 0;
+    }
 
     //Formata data de formato string (sqlite3) para data (Brasil)
     function format_date($date_string){
         return $date_string != null ? date('d/m/Y H:i:s',strtotime($date_string)) : "";
-    }
-
-    //Retorna dados de seguidor
-    function get_follower_data(int $id_user_follower,int $id_user_followed, bool $array){
-        
     }
 
     //Retorna true se o usuário atual estiver autenticado - status de autenticação
@@ -78,11 +180,11 @@
             echo "</div>";
             die();
         }
-        if ($logged == true && !isset($_SESSION["user"])){
+        if ($logged == true && !logged()){
             header("Location: ".USERS_LINK."auth/login.php");
             exit;
         }   
-        if ($logged == false && isset($_SESSION["user"])){
+        if ($logged == false && logged()){
             header("Location: ".USERS_LINK."profile.php");
             exit;
         }
@@ -100,7 +202,7 @@
     }
 
     //Consulta de usuários
-    function get_users(array $array = []){
+    function get_users(array $array = [], $single = false){
         $db = db_conn();
         $se_SQL = "SELECT * FROM users";
         if (!empty($array)) {
@@ -110,21 +212,25 @@
                 if (!empty($values)) {
                     $value_parts = explode(',',$values);
                     foreach ($value_parts as $value) {
-                        $marks[] = "$col LIKE ?";
+                        $marks[] = str_contains($col,"id") ? "$col = ?" : "$col LIKE ?";
                     }
                     $conditions[] = implode(" OR ",$marks);
                 }
             }
             $se_SQL .= implode(" AND ",$conditions);
         }
-        echo $se_SQL;
+        //echo $se_SQL;
         $se_query = $db->prepare($se_SQL);
         if (!empty($array)) {
             $i = 1;
             foreach ($array as $col => $value) {
                 if (!empty($value)) {
                     foreach ($value_parts as $value) {
-                        $se_query->bindValue($i,"%".ucfirst($value)."%",SQLITE3_TEXT);
+                        if (str_contains($col,"id")) {
+                            $se_query->bindValue($i,trim($value),SQLITE3_INTEGER);
+                        }else{
+                            $se_query->bindValue($i,"%".trim(ucfirst($value))."%",SQLITE3_TEXT);
+                        }
                         $i++;
                     }
                 }
@@ -133,10 +239,25 @@
         $se_result = $se_query->execute();
         $users = [];
         while ($row = $se_result->fetchArray(SQLITE3_ASSOC)) {
+            if (logged()) {
+                $users_follow = $db->querySingle("SELECT * FROM users_follow WHERE id_user_follower = ".$_SESSION['user']['id']." AND id_user_followed = ".$row['id'], true);
+                if (!empty($users_follow) && $users_follow['active'] == 1) {
+                    $row['following'] = true;
+                    $row['followed_first_at'] = format_date($users_follow['created_at']);
+                    $row['following_since'] = $users_follow['updated_at'] == null ? format_date($users_follow['created_at']) : format_date($users_follow['updated_at']);               
+                }else{
+                    $row['following'] = false;
+                    $row['followed_first_at'] = "";
+                    $row['following_since'] = "";
+                }
+            }else{
+                $row['following'] = false;
+                $row['followed_first_at'] = "";
+                $row['following_since'] = "";
+            }       
             $users[] = $row;
         }
-        return $users;
+        return $single ? $users[0] : $users;
         //var_dump($users);
     }
-
 ?>

@@ -52,12 +52,13 @@
                 unset($_SESSION['feedback']);
                 $_SESSION['feedback']['update'] = "Atualizado!";
                 unset($_SESSION['update']);
+                header("Location: ".USERS_LINK."profile.php");
             }else{
                 // Check the last error code and message
                 $_SESSION['feedback']['update'] = "Houve um erro com a atualização dos dados: ".$db->lastErrorMsg();
+                header("Location: ".USERS_LINK."crud/my_data.php");
             }
         }
-        header("Location: ".USERS_LINK."crud/my_data.php");
     }else{
         echo "Você não devia estar aqui.";
         echo "<a href = '".MAIN_LINK."index.php'>Voltar</a>";

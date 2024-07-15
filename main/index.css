@@ -6,7 +6,9 @@ form .form-group {
     margin-bottom: 0.5rem;
 }
 .form-container {
+    position: relative;
     width: 35%;
+    overflow: visible;
 }
 
 /* Estilos básicos para a página */
@@ -22,11 +24,12 @@ body {
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    overflow: auto;
+    
 }
 
 .table-container {
     max-width: 95%;
+    overflow: auto;
 }
 
 /* Container para centralizar e ajustar a tabela */
@@ -93,4 +96,29 @@ a.btn, .nav-link {
 
 .nav-link,.nav-link:hover {
     text-decoration: none;
+}
+
+.post-options .dropdown-toggle::after {
+    display: none;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0; /* Remove the gap so it looks consistent */
+}
+.post-options {
+    position: absolute;
+    top: 0;
+    right: 10px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info img {
+    display: inline-block;
+    margin-right: 10px;
+    width: 35px;
 }

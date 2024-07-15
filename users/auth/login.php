@@ -11,9 +11,11 @@
     </head>
     <body>
         <?php require SRC_URL."front/navbar.php" ?>
+        <div class = "text-center">
+            <h2>Login</h2>
+        </div>
         <!-- Form -->
         <form class = "container form-container" action="login_auth.php" method = "POST" autocomplete = "off">
-            <h3 class = "text-center">Entrar</h3>
             <!-- E-mail -->
             <div class = "form-group">
                 <label for="email-input" class = "form-label">E-mail</label>
