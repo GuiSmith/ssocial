@@ -1,7 +1,7 @@
 <?php
 
     require "../src/back/config.php";
-    checkAuth(true);
+    checkAuth(true,true);
 
     if (isset($_GET['id']) && is_natural($_GET['id'])) {
         if ($_SESSION['user']['adm']) {

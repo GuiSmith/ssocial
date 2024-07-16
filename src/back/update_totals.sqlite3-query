@@ -1,0 +1,70 @@
+-- database: ./database.sqlite
+
+-- Use the ▷ button in the top right corner to run the entire file.
+
+SELECT * FROM users;
+
+-- Atualizar total de curtidas dadas
+UPDATE users_statistics 
+SET total_posts_likes_given = (
+    SELECT COUNT(*) 
+    FROM post_likes 
+    WHERE post_likes.id_user = users_statistics.id_user
+);
+
+-- Atualizar total de curtidas recebidas
+UPDATE users_statistics 
+SET total_posts_likes_received = (
+    SELECT COUNT(*) 
+    FROM post_likes 
+    JOIN posts ON post_likes.id_post = posts.id 
+    WHERE posts.id_user = users_statistics.id_user
+);
+
+-- Atualizar total de curtidas por post
+UPDATE posts 
+SET total_likes = (
+    SELECT COUNT(*) 
+    FROM post_likes 
+    WHERE post_likes.id_post = posts.id
+);
+
+-- Atualizar total de posts
+UPDATE users_statistics 
+SET total_posts = (
+    SELECT COUNT(*) 
+    FROM posts 
+    WHERE posts.id_user = users_statistics.id_user
+);
+
+-- Atualizar total de seguidores
+UPDATE users_statistics 
+SET total_followers = (
+    SELECT COUNT(*) 
+    FROM users_follow 
+    WHERE users_follow.id_user_followed = users_statistics.id_user
+);
+
+-- Atualizar total de seguindo
+UPDATE users_statistics 
+SET total_following = (
+    SELECT COUNT(*) 
+    FROM users_follow 
+    WHERE users_follow.id_user_follower = users_statistics.id_user
+);
+
+-- Atualizar total de visitas feitas
+UPDATE users_statistics 
+SET total_visits_made = (
+    SELECT COUNT(*) 
+    FROM users_visits 
+    WHERE users_visits.id_guest = users_statistics.id_user
+);
+
+-- Atualizar total de visitas recebidas
+UPDATE users_statistics 
+SET total_visits_received = (
+    SELECT COUNT(*) 
+    FROM users_visits 
+    WHERE users_visits.id_host = users_statistics.id_user
+);

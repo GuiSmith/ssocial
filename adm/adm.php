@@ -1,8 +1,7 @@
 <?php
 
     require "../src/back/config.php";
-    checkAuth(true,true);
-    if(!isset($_GET['type'])) header("Location: schema.php?type=table");
+    checkAuth(true, true);
 ?>
 
 <!DOCTYPE html>
@@ -15,9 +14,15 @@
         
         <section>
             <div class = "text-center">
-                <h1>SQLITE SCHEMA</h1>
+                <h1>Olá ADM</h1>
+                <h3>Introdução</h3>
             </div>
             <div class = "container">
+                <div class = "input-group">
+                    <?php
+                        set_button_link('Atualizar total de curtidas dadas','routines.php?type=','btn btn-dark');
+                    ?>
+                </div>
                 <?php
             
                     $type = isset($_GET['type']) ? strtolower($_GET['type']) : "";

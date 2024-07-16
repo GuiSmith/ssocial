@@ -20,7 +20,8 @@
             ]);
             if ($_SESSION['user']['adm']) {
               set_nav_dropdown("ADM", ADM_LINK."schema.php",[
-                ["path" => BASE_LINK."tests.php", "text" => "Testes"]
+                ["path" => BASE_LINK."tests.php", "text" => "Testes"],
+                ["path" => ADM_LINK."routines.php", "text" => "Rotinas"],
               ]);
               //set_nav_link(BASE_LINK."tests.php","Testes");
             }

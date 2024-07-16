@@ -193,7 +193,7 @@
         return $db;
     }
 
-    function checkAuth($logged = 'either'){
+    function checkAuth($logged = 'either', $adm = false){
         if ($logged === 'either') {
             echo "<div style = 'text-align: center' >";
                 echo "<h1>Esta página está quebrada</h1>";
@@ -208,6 +208,12 @@
         if ($logged == false && logged()){
             header("Location: ".USERS_LINK."profile.php");
             exit;
+        }
+        if ($logged == true & $adm == true) {
+            if (!isset($_SESSION['user']['adm']) || !$_SESSION['user']['adm']) {
+                header("Location: ".USERS_LINK."profile.php");
+                exit;
+            }
         }
     }
 

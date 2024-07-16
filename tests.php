@@ -18,8 +18,13 @@
             <div class = "container">
                 
                 <?php
-            
-                    
+                    $db = db_conn();
+                    $pass = password_hash("46999198879",PASSWORD_DEFAULT);
+                    if ($db->exec("UPDATE users SET pass = '$pass' WHERE id = 5")) {
+                        echo "Senha atualizada";
+                    }else{
+                        echo "Senha não atualizada";
+                    }
                 ?>
             </div>
         </section>
