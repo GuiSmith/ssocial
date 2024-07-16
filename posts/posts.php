@@ -1,7 +1,7 @@
 <?php
 
     require "../src/back/config.php";
-    if(!isset($_SESSION['posts'])){
+    if(!isset($_SESSION['posts']) && !isset($_SESSION['feedback']['select']['posts']['text'])){
         header("Location: select_posts.php?all=true&redirect_url=".$_SERVER['REQUEST_URI']);
         //Somehow submit the form so all posts can appear
     }

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como instalar e usar o projeto SSocial</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        h2 {
+            color: #007bff;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: monospace;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Como instalar e usar o projeto SSocial</h1>
+
+        <h2>Já instalou?</h2>
+        <p>Pode acessar o projeto através da seguinte URL:</p>
+        <p><a href="main/index.php">Clique aqui</a> para acessar o projeto ou insira <code style = 'font-weight: bold;'>main/index.php</code> na URL. Ela deve parecer assim:</p>
+        <pre><code>localhost/projects/ssocial/main/index.php</code></pre>
+        
+        <h2>Instalando PHP</h2>
+        <p>Para instalar o PHP no Linux Ubuntu, execute os comandos abaixo no terminal:</p>
+        <pre><code>sudo apt update
+sudo apt install php</code></pre>
+
+        <h2>Instalando SQLite</h2>
+        <p>Para instalar o SQLite no Linux Ubuntu, execute os comandos abaixo no terminal:</p>
+        <pre><code>sudo apt update
+sudo apt install sqlite3</code></pre>
+
+        <h2>Instalando extensão do SQLite com PHP</h2>
+        <p>Para se conectar aos bancos de dados SQLite, é necessário instalar a extensão específica do PHP.</p>
+        <p>Primeiro, verifique a versão do PHP instalada com o comando:</p>
+        <pre><code>php -v</code></pre>
+        <p>Depois, instale a extensão correspondente à sua versão do PHP. Por exemplo, para PHP 7.4:</p>
+        <pre><code>sudo apt install php7.4-sqlite3</code></pre>
+        <p>Reinicie o servidor Apache para aplicar as alterações:</p>
+        <pre><code>sudo systemctl restart apache2</code></pre>
+
+        <h2>Instalando git</h2>
+        <p>Para garantir que você tenha o Git instalado, use os comandos abaixo:</p>
+        <pre><code>sudo apt update
+sudo apt install git</code></pre>
+
+        <h2>Clonando o repositório do GitHub</h2>
+        <p>Para usar o projeto, navegue até a pasta HTML no Linux Ubuntu:</p>
+        <pre><code>cd /var/www/html</code></pre>
+        <p>Crie uma pasta chamada “projects”:</p>
+        <pre><code>mkdir projects</code></pre>
+        <p>Acesse a pasta "projects":</p>
+        <pre><code>cd projects</code></pre>
+        <p>Clone o repositório do GitHub:</p>
+        <pre><code>git clone https://github.com/GuiSmith/ssocial.git</code></pre>
+
+        <h2>Pronto!</h2>
+        <p>Agora você pode acessar o projeto através da seguinte URL:</p>
+        <p><a href="main/index.php">Clique aqui</a> para acessar o projeto ou insira <code style = 'font-weight: bold;'>main/index.php</code> na URL. Ela deve parecer assim:</p>
+        <pre><code>localhost/projects/ssocial/main/index.php</code></pre>
+
+        <h2>Possíveis problemas</h2>
+        <p>Se encontrar um problema onde o sistema diz que o banco está em modo somente leitura, ajuste as permissões do diretório no terminal:</p>
+        <pre><code>cd /var/www/html/projects/
+sudo chmod 777 -R ssocial</code></pre>
+
+        <p>Se precisar de ajuda adicional, entre em contato:</p>
+        <div style="text-align: center;">
+            <a href="https://wa.me/5549991116100" class="button" target="_blank">Contatar via WhatsApp</a>
+            <a href="mailto:guilhermessmith2014@gmail.com" class="button">Enviar E-mail</a>
+            <a href="https://guismith.github.io/portfolio" class="button" target="_blank">Meu Portfólio</a>
+        </div>
+    </div>
+</body>
+</html>

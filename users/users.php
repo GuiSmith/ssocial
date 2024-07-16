@@ -18,6 +18,11 @@
             <h2>Pesquisa de usuários</h2>
         </div>
         <form class = "container form-container" action="select_users.php" method = "POST" autocomplete = "off">
+            <!-- ID -->
+            <div class = "form-group">
+                <label for="id-input" class = "form-label">ID Usuário</label>
+                <input type="text" id = "id-input" name = "id" class = "form-control" value = "<?php echo isset($_SESSION['select']['users']["id"]) ? $_SESSION['select']['users']["id"] : "" ?>">
+            </div>
             <!-- Name -->
             <div class = "form-group">
                 <label for="username-input" class = "form-label">Nome</label>
@@ -56,7 +61,6 @@
                     <th scope="col">E-mail</th>
                     <th scope="col">CPF</th>
                     <th scope="col">Data cadastro</th>
-                    <th scope="col">CPF</th>                    
                     <th scope="col" colspan="2">Ações</th>
                 </thead>
                 <tbody>
@@ -70,7 +74,6 @@
                                 echo "<td>".$user['email']."</td>";
                                 echo "<td>".$user['cpf']."</td>";
                                 echo "<td>".format_date($user['created_at'])."</td>";
-                                echo "<td>".$user['cpf']."</td>";
                                 echo "<td>
                                     <div class = 'btn-group' role = 'group' aria-labelledby = 'users actions'>"
                                         .set_link_button('Perfil','profile.php?id='.$user['id'],'btn btn-dark')

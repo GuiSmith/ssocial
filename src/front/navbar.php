@@ -5,6 +5,7 @@
         <!-- Project -->
         <?php
           set_nav_link(MAIN_LINK."index.php","Sobre");
+          set_nav_link(BASE_LINK."index.html","Instalação");
           set_nav_link(USERS_LINK."users.php","Usuários");
           set_nav_dropdown("Postagens", POSTS_LINK."posts.php",[
             ["path" => POSTS_LINK."crud/post.php", "text" => "Novo"],
@@ -17,7 +18,12 @@
               ["path" => USERS_LINK."users_statistics.php", "text" => "Estatísticas"],
               ["path" => USERS_LINK."visits.php", "text" => "Visitas"]
             ]);
-            set_nav_link(BASE_LINK."tests.php","Testes");
+            if ($_SESSION['user']['adm']) {
+              set_nav_dropdown("ADM", ADM_LINK."schema.php",[
+                ["path" => BASE_LINK."tests.php", "text" => "Testes"]
+              ]);
+              //set_nav_link(BASE_LINK."tests.php","Testes");
+            }
             set_nav_link(USERS_LINK."auth/log_out.php","Sair");
           }else{
             //Not logged

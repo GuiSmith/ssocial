@@ -2,11 +2,30 @@
 
     session_start();
 
+    function myErrorHandler($errno, $errstr, $errfile, $errline) {
+        global $php_error_message;
+        if (strpos($errstr, 'attempt to write a readonly ') !== false) {
+            // Encaminha usuário para a tela que explica o erro de somente leitura do banco de dados
+            header("Location: /projects/ssocial/readonly_error.php");
+        } else {
+            // Exibe outros erros normalmente
+            $php_error_message = "Erro: [$errno] $errstr - $errfile:$errline";
+        }
+    
+        // Não executa o manipulador interno de erros do PHP
+        return true;
+    }
+    
+    // Configura o manipulador de erros personalizado
+    set_error_handler("myErrorHandler");
+
+
     define('BASE_URL', '/var/www/html/projects/ssocial/');
     define('MAIN_URL', BASE_URL . 'main/');
     define('SRC_URL', BASE_URL . 'src/');
     define('USERS_URL', BASE_URL . 'users/');
     define('POSTS_URL', BASE_URL . 'posts/');
+    define('ADM_URL', BASE_URL . 'adm/');
 
     define('BASE_LINK','/projects/ssocial/');
     define('MAIN_LINK', BASE_LINK . 'main/');
@@ -14,6 +33,8 @@
     define('MEDIA_LINK', BASE_LINK . 'media/');
     define('USERS_LINK', BASE_LINK . 'users/');
     define('POSTS_LINK', BASE_LINK . 'posts/');
+    define('ADM_LINK', BASE_LINK . 'adm/');
+
 
     if (!defined("SQLITE3_CONSTRAINT")) {
         define("SQLITE3_CONSTRAINT",19);

@@ -28,12 +28,12 @@
 
         $posts = get_posts($cols);
 
-        if ($posts) {
+        if ($posts && !empty($posts)) {
             $_SESSION['posts'] = $posts;
+            unset($_SESSION['feedback']['select']);
         }else{
             $_SESSION['feedback']['select']['posts']['text'] = "Nenhum post se enquadra nos parâmetros";
         }
-
         /*
         echo "<br><br>Dados: ";
         var_dump($_SESSION['select']['posts']);
@@ -41,6 +41,8 @@
         var_dump($cols);
         echo "<br><br>Usuários: ";
         var_dump($posts);
+        echo "<br><br>Feedback: ";
+        if(isset($_SESSION['feedback']['select']['posts']['text'])) var_dump($_SESSION['feedback']['select']['posts']['text']);
         */
         header("Location: $redirect_url");
     }

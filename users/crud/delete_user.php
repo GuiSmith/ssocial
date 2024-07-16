@@ -5,9 +5,9 @@
         checkAuth(true);
         $db = db_conn();
 
-        $id = isset($_GET['id']) ? $_GET['id'] : 0;
+        $id = isset($_GET['id']) && is_natural($_GET['id']) ? $_GET['id'] : 0;
 
-        if (!is_numeric($id) || $id < 0) die("ID inválido");
+        if ($id <= 0) die("ID inválido");
         if ($_SESSION['user']['id'] != $id) {
             header("Location: ".USERS_LINK."crud/my_data.php");
         }else{
@@ -16,7 +16,7 @@
             $del_query->bindValue(':id',$id,SQLITE3_INTEGER);
             if ($del_query->execute()) {
                 echo "ID $id deletado com sucesso!";
-                header("Location: ".USERS_URL."auth/log_out.php");
+                header("Location: ../auth/log_out.php");
             }else{
                 echo "O ID $id não pôde ser deletado pois algo deu errado";
             }

@@ -69,6 +69,14 @@
         </div>
         <form class = "container form-container" action="follow_user.php?redirect_url=<?php echo $_SERVER['REQUEST_URI'] ?>" method="POST" autocomplete = 'off'  >
             <?php
+                if (logged() && $_SESSION['user']['adm'] && $self == false) {
+                    echo "<div class = 'input-group'>";
+                    echo set_link_button('Deletar',USERS_LINK.'crud/delete_user.php?id='.$profile['id'],'btn btn-danger');
+                    echo set_link_button('ADM',ADM_LINK.'toggle_adm.php?id='.$profile['id'],$profile['adm'] ? 'btn btn-success' : 'btn btn-primary');
+                    echo "</div>";
+                }else{
+
+                }
                 echo set_form_input('ID','id',$profile['id'],['readonly' => true]);
                 echo set_form_input('Nome','username',$profile['username'],['disabled' => true]);
                 echo set_form_input('E-mail','email',$profile['email'],['disabled' => true]);
