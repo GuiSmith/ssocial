@@ -5,7 +5,7 @@
     $db = db_conn();
     $result = $db->query('SELECT * FROM my_data WHERE id = '.$_SESSION['user']['id']);
     $my_data = $result->fetchArray(SQLITE3_ASSOC);
-    
+    $my_data['image_src'] = $my_data['image_src'] == null ? MEDIA_LINK.'std_pfp.png' : $my_data['image_src'];
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +19,23 @@
         <div class = "text-center">
             <h2>Meus dados</h2>
         </div>
-        <form class = "container form-container" action="update_user.php" method = "POST" autocomplete = "off">
+        <form class = "container form-container" action="update_user.php" method = "POST" autocomplete = "off" enctype="multipart/form-data">
+            <!-- Profile picture -->
+            <div class = "form-group text-center">
+                <label for="image-input" class = "form-label">
+                    <img class = "border border-dark rounded-circle img-thumbnail" width = "50%" id = "image-label" src="<?php echo $my_data['image_src'] ?>" alt="img">
+                </label>
+                <p>
+                    <small id = "image-feedback" class = "form-text text-primary" >
+                        Clique na imagem para altera-la
+                    </small>
+                    <br>
+                    <small class = 'form-text text-danger'>
+                    <?php echo (isset($_SESSION['feedback']['image'])) ? $_SESSION['feedback']['image'] : ""; ?>
+                    </small>
+                </p>
+                <input type="file" name = "image_src" style = 'display: none' id = "image-input" >
+            </div>
             <!-- Name -->
             <div class = "form-group">
                 <label for="username-input" class = "form-label">Nome</label>
@@ -81,5 +97,27 @@
             </div>
         </form>
         <?php require SRC_URL."front/script.php" ?>
+        <script>
+            window.onload = () => {
+                var fileInput = document.getElementById('image-input');
+                var imageLabel = document.getElementById('image-label');
+                fileInput.addEventListener('change', function(e) {
+                    var file = fileInput.files[0];
+                    var imageType = /image.*/;
+
+                    if (file.type.match(imageType)) {
+                        var reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            imageLabel.src = reader.result;
+                        }
+
+                        reader.readAsDataURL(file);
+                    } else {
+                        document.getElementById('image-feedback').innerHTML = "File not supported!"
+                    }
+                });
+            }
+        </script>
     </body>
 </html>

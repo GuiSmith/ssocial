@@ -74,9 +74,12 @@
                     echo set_link_button('Deletar',USERS_LINK.'crud/delete_user.php?id='.$profile['id'],'btn btn-danger');
                     echo set_link_button('ADM',ADM_LINK.'toggle_adm.php?id='.$profile['id'],$profile['adm'] ? 'btn btn-success' : 'btn btn-primary');
                     echo "</div>";
-                }else{
-
                 }
+            ?>
+            <div class = "text-center">
+                <img src="<?php echo $profile['image_src'] ?>" alt="img" class = "border border-dark rounded-circle img-thumbnail" width = "50%">
+            </div>
+            <?php
                 echo set_form_input('ID','id',$profile['id'],['readonly' => true]);
                 echo set_form_input('Nome','username',$profile['username'],['disabled' => true]);
                 echo set_form_input('E-mail','email',$profile['email'],['disabled' => true]);

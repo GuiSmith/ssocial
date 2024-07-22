@@ -6,7 +6,7 @@
         global $php_error_message;
         if (strpos($errstr, 'attempt to write a readonly ') !== false) {
             // Encaminha usuário para a tela que explica o erro de somente leitura do banco de dados
-            header("Location: /projects/ssocial/readonly_error.php");
+            header("Location: /ssocial/readonly_error.php");
         } else {
             // Exibe outros erros normalmente
             $php_error_message = "Erro: [$errno] $errstr - $errfile:$errline";
@@ -20,21 +20,22 @@
     set_error_handler("myErrorHandler");
 
 
-    define('BASE_URL', '/var/www/html/projects/ssocial/');
+    define('BASE_URL', '/var/www/html/ssocial/');
     define('MAIN_URL', BASE_URL . 'main/');
     define('SRC_URL', BASE_URL . 'src/');
+    define('MEDIA_URL', BASE_URL . 'media/');
     define('USERS_URL', BASE_URL . 'users/');
     define('POSTS_URL', BASE_URL . 'posts/');
     define('ADM_URL', BASE_URL . 'adm/');
 
-    define('BASE_LINK','/projects/ssocial/');
+    define('BASE_LINK','/ssocial/');
     define('MAIN_LINK', BASE_LINK . 'main/');
     define('SRC_LINK', BASE_LINK . 'src/');
     define('MEDIA_LINK', BASE_LINK . 'media/');
     define('USERS_LINK', BASE_LINK . 'users/');
     define('POSTS_LINK', BASE_LINK . 'posts/');
     define('ADM_LINK', BASE_LINK . 'adm/');
-
+    define('TABLE_MAX_LINES', 15);
 
     if (!defined("SQLITE3_CONSTRAINT")) {
         define("SQLITE3_CONSTRAINT",19);
@@ -48,6 +49,125 @@
         "updated_at" => "data atualização"
     ]);
     define('ERROR_UNIQUE','UNIQUE');
+    
+    //Returns a sanitized a file name
+    function sanitize_filename($filename) {
+        // Remove any special characters except for hyphens, underscores, and periods
+        $filename = preg_replace('/[^A-Za-z0-9\-_\.]/', '', $filename);
+    
+        // Remove any sequences of periods or special characters to avoid directory traversal
+        $filename = preg_replace('/(\.{2,})/', '', $filename);
+    
+        // Trim the filename to a reasonable length
+        $filename = substr($filename, 0, 255);
+    
+        // Remove leading and trailing spaces, and convert special characters to HTML entities
+        $filename = htmlspecialchars(trim($filename));
+    
+        return $filename;
+    }
+
+    //Returns an unique file directory/filename.extension
+    function get_unique_filename($directory, $filename) {
+        $unique_id = uniqid();
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+        $basename = pathinfo($filename, PATHINFO_FILENAME);
+        $sanitized_basename = sanitize_filename($basename);
+        return $directory . $sanitized_basename . '_' . $unique_id . '.' . $extension;
+    }
+
+    //Uploads an image based on the user id, directory (either profile picture, post or comment) and file itself
+    function upload_image(int $id_user,string $folder_name,array $file_array){
+        if (empty($file_array) || !isset($file_array['tmp_name']) || !file_exists($file_array['tmp_name'])) {
+            var_dump($file_array);
+            return "No image was sent to be processed";
+        }
+
+        $image_dir = MEDIA_URL."users/$id_user/$folder_name/";
+        $feedback = [];
+        $ok = true;
+
+        if (!is_dir($image_dir)) {
+            mkdir($image_dir,0777,true);
+            //$feedback['folder'] = "Image folder created!";
+        }else{
+            //$feedback['folder'] = "Didn't have to create an image folder because it already exists!";
+        }
+
+        // Get the uploaded file information
+        $target_file = get_unique_filename($image_dir,basename($file_array["name"]));
+        $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // Check if the file is an actual image or fake image
+        $check = getimagesize($file_array["tmp_name"]);
+        if ($check === false) {
+            $feedback['type'] = "File is not an image!";
+            $ok = false;
+        }else{
+            unset($feedback['file_type']);
+        }
+
+        // Check file size (5MB limit)
+        if ($file_array["size"] > 5000000) {
+            $feedback['size'] = "Image size is too big, chose a smaller one";
+            $ok = false;
+        }else{
+            unset($feedback['size']);
+        }
+
+        // Allow certain file formats
+        $allowed_formats = ["jpg", "jpeg", "png", "gif"];
+        if (!in_array($image_file_type, $allowed_formats)) {
+            $feedback['image_type'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $ok = false;
+        }else{
+            unset($feedback['image_type']);
+        }
+
+        // Attempt to move the uploaded file to the target directory
+        if ($ok) {
+            if (move_uploaded_file($file_array["tmp_name"], $target_file)) {
+                $feedback['upload'] = "File has been successfully uploaded";
+                $file_name = basename($target_file);
+                return [
+                    'ok' => true,
+                    'feedback' => implode("<br>",$feedback),
+                    'image_src' => "http://localhost/ssocial/media/users/$id_user/$folder_name/$file_name"
+            ];
+            }else{
+                $feedback['upload'] = "Sorry, there was an error uploading your file.";
+            }
+        }else{
+            $feedback['upload'] = "File was not uploaded because of dependencies.";
+        }
+        
+        return ['ok' => false,'feedback' => implode("<br>",$feedback)];
+    }
+
+    //Calculates the amount of pages based on rows count and table's max lines
+    function getTablePages($sql){
+        $db = db_conn();
+        $lines = $db->querySingle("SELECT COUNT(created_at) AS lines FROM ($sql)");
+        if ($lines <= TABLE_MAX_LINES) {
+            $pages = 0;
+        }else{
+            //Strip last page lines
+            $last_page_lines = $lines%TABLE_MAX_LINES;
+            //Calculate pages count
+            if ($last_page_lines > 0) {
+                //If rows count is exactly divisible by the defined max lines
+                //Also add one more page
+                $pages = (($lines-$last_page_lines)/TABLE_MAX_LINES) + 1;
+            }else{
+                //If rows count is exactly divisible by the defined max lines
+                $pages = $lines/TABLE_MAX_LINES;
+            }
+            $pages_array = [];
+
+            //var_dump("$pages and a last page with $last_page_lines lines");
+        }
+        return $pages;
+    }
     
     //Consulta de postagens
     function get_posts(array $array = [], $single = false){
@@ -97,6 +217,7 @@
                 $row['liked'] = false;
             }
             $row['posted_at'] = time_ago($row['created_at']);
+            $row['image_src'] = $row['image_src'] == null ? 'http://localhost/ssocial/media/std_pfp.png' : $row['image_src'];
             $posts[] = $row;
         }
         return $single ? $posts[0] : $posts;
@@ -281,7 +402,8 @@
                 $row['following'] = false;
                 $row['followed_first_at'] = "";
                 $row['following_since'] = "";
-            }       
+            }
+            $row['image_src'] = $row['image_src'] == NULL ? 'http://localhost/ssocial/media/std_pfp.png' : $row['image_src'];
             $users[] = $row;
         }
         return $single ? $users[0] : $users;

@@ -17,6 +17,10 @@
             <div class = "text-center">
                 <h2>Nova postagem</h2>
             </div>
+            <!-- Add Image Icon -->
+            <button type="button" class="btn btn-outline-primary">
+                <i class="fas fa-image"></i> Add Image
+            </button>
             <!-- Text -->
             <div class = "form-group">
                 <label for="text-input" class = "form-label">Texto</label>

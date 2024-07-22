@@ -128,7 +128,7 @@
                 <h3>Atualizar totais</h3>
             </div>
             <div class = "container">
-                <div class = "input-group">
+                <div class = "btn-group">
                 <?php
                     $class = "btn btn-outline-dark";
 

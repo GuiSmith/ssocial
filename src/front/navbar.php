@@ -112,7 +112,7 @@
     $id_input = "<input type = 'hidden' name = 'id' value = '".$post['id']."' >";
     
     $user_info = "<div class = 'user-info'>";
-    $user_info .= "<img src = '".MEDIA_LINK."bootstrap.png' alt = ''>";
+    $user_info .= "<img class = 'rounded-circle' src = '".$post['image_src']."' alt = ''>";
     $user_info .= "<div>";
     $user_info .= "<small class = 'text-bold'>".$post['username']."</small>";
     $user_info .= "<br>";
@@ -156,6 +156,31 @@
 
     return $form;
 
+  }
+
+  function get_pagination_controls ($pages){
+    $pagination_controls = "<div class = 'text-center'>";
+    $pagination_controls .= "<div class = 'btn-group'>";
+    for ($i=0; $i < $pages; $i++) {
+        //Button href will be the page
+        $href = '?page='.($i > 0 ? $i : 0);
+        //Button text will be the page number
+        $text = (string) $i+1;
+        //Button class will be the current page, if current page is not set, then it will be the first one
+        if (isset($_GET['page'])) {
+          if ($_GET['page'] == $i) {
+            $class = 'btn btn-dark';
+          }else{
+            $class = 'btn btn-secondary';
+          }
+        }else{
+          $class = $i == 0 ? 'btn btn-dark' : 'btn btn-secondary';
+        }
+        $pagination_controls .= set_link_button($text,$href,$class);
+    }
+    $pagination_controls .= "</div>";
+    $pagination_controls .= "</div>";
+    return $pagination_controls;
   }
 
 ?>
