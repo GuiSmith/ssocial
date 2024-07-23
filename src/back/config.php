@@ -5,8 +5,17 @@
     function myErrorHandler($errno, $errstr, $errfile, $errline) {
         global $php_error_message;
         if (strpos($errstr, 'attempt to write a readonly ') !== false) {
+            // Executa o comando chmod para alterar as permissões
+            $output = shell_exec('sudo chmod 755 -R /caminho/para/ssocial');
+            if ($output === null) {
+                $php_error_message = "Erro ao mudar as permissões";
+            } else {
+                $php_error_message = "Permissões alteradas com sucesso";
+            }
+            
             // Encaminha usuário para a tela que explica o erro de somente leitura do banco de dados
             header("Location: /ssocial/readonly_error.php");
+            exit(); // Certifique-se de parar a execução do script após o redirecionamento
         } else {
             // Exibe outros erros normalmente
             $php_error_message = "Erro: [$errno] $errstr - $errfile:$errline";

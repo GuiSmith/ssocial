@@ -31,6 +31,8 @@
             }
             var_dump($last_id);
         }
-        header("Location: $href");
+        var_dump($_FILES['image_src']);
+        var_dump($_POST['caption']);
+        //header("Location: $href");
     }
 ?>

@@ -30,5 +30,6 @@
                 </a>
             </div>
         </div>
+        <?php echo $php_errormsg; ?>
     </body>
 </html>

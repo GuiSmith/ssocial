@@ -12,15 +12,11 @@
     </head>
     <body>
         <?php require SRC_URL."front/navbar.php" ?>
-        <form class = "container form-container" action="set_post.php" method = "POST" autocomplete = "off">
+        <form class = "container form-container" action="set_post.php" method = "POST" autocomplete = "off" enctype="multipart/form-data">
             <!-- Título -->
             <div class = "text-center">
                 <h2>Nova postagem</h2>
             </div>
-            <!-- Add Image Icon -->
-            <button type="button" class="btn btn-outline-primary">
-                <i class="fas fa-image"></i> Add Image
-            </button>
             <!-- Text -->
             <div class = "form-group">
                 <label for="text-input" class = "form-label">Texto</label>
@@ -29,11 +25,22 @@
                     100
                 </small>
             </div>
+            <!-- Images -->
+            <div class = "form-group">
+                <label for = "image-input" class="btn btn-outline-primary">
+                    <i class="fas fa-image"></i> Add Image
+                </label>
+                <input type="file" id = "image-input" name = "image_src[]" style = "display: none" multiple>
+                <div id="post-image-container" class = "container" style = "display:none"></div>
+            </div>
             <!-- Enviar -->
             <div style = "text-align: right" >
                 <button type = "submit" class = "btn btn-primary">Postar</button>    
             </div>
         </form>
         <?php require SRC_URL."front/script.php" ?>
+        <script>
+            window.onload = updateMultipleImagesOnChange('image-input','post-image-container')
+        </script>
     </body>
 </html>

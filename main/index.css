@@ -98,6 +98,10 @@ a.btn, .nav-link {
     text-decoration: none;
 }
 
+.post-img {
+    max-width: 100%;
+}
+
 .post-options .dropdown-toggle::after {
     display: none;
 }

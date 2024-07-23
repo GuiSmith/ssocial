@@ -98,26 +98,7 @@
         </form>
         <?php require SRC_URL."front/script.php" ?>
         <script>
-            window.onload = () => {
-                var fileInput = document.getElementById('image-input');
-                var imageLabel = document.getElementById('image-label');
-                fileInput.addEventListener('change', function(e) {
-                    var file = fileInput.files[0];
-                    var imageType = /image.*/;
-
-                    if (file.type.match(imageType)) {
-                        var reader = new FileReader();
-
-                        reader.onload = function(e) {
-                            imageLabel.src = reader.result;
-                        }
-
-                        reader.readAsDataURL(file);
-                    } else {
-                        document.getElementById('image-feedback').innerHTML = "File not supported!"
-                    }
-                });
-            }
+            window.onload = updateImageOnChange('image-input','image-label');
         </script>
     </body>
 </html>
