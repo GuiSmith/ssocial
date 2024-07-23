@@ -110,10 +110,11 @@ a.btn, .nav-link {
     display: block;
     margin-top: 0; /* Remove the gap so it looks consistent */
 }
-.post-options {
+.post-options,.post-img-options {
     position: absolute;
     top: 0;
     right: 10px;
+    cursor: pointer;
 }
 
 .user-info {

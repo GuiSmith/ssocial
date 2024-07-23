@@ -59,9 +59,8 @@
                         captionInput.placeholder = "Digite uma legenda para esta imagem...";
 
                         let deleteButton = document.createElement('button');
-                        deleteButton.type = 'button';
                         deleteButton.className = 'btn btn-danger btn-sm';
-                        deleteButton.innerHTML = 'Delete';
+                        deleteButton.innerHTML = "Deletar";
                         deleteButton.onclick = function() {
                             if (confirm("Tem certeza de que deseja deletar esta imagem da postagem?")) {
                                 selectedFiles = selectedFiles.filter(f => f.name !== file.name || f.size !== file.size); // Remove file from selectedFiles
@@ -70,15 +69,20 @@
                             }
                         };
 
+                        let inputGroup = document.createElement('div');
+                        inputGroup.className = "input-group";
+                        inputGroup.appendChild(captionInput);
+                        inputGroup.appendChild(deleteButton);
+
                         let img = new Image();
                         img.src = reader.result;
                         img.className = "post-img rounded mx-auto d-block p-1";
 
                         let div = document.createElement('div');
                         div.className = "form-group img-thumbnail";
-                        div.appendChild(captionInput);
+                        div.style.position = "relative";
+                        div.appendChild(inputGroup);
                         div.appendChild(img);
-                        div.appendChild(deleteButton);
                         filesDisplayArea.appendChild(div);
                     }
 
